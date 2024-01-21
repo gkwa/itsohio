@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/taylormonacelli/bravelock/filename"
 	"github.com/taylormonacelli/itsohio/common"
 
 	"github.com/glebarez/sqlite"
@@ -21,7 +22,11 @@ var (
 )
 
 func Test2() error {
-	db, err := gorm.Open(sqlite.Open("test2.sqlite"), &gorm.Config{})
+	strategy := &filename.ReflectionStrategy{}
+	fname := filename.GetFnameWithoutExtension(strategy.GetFilename())
+	fname = fmt.Sprintf("%s.sqlite", fname)
+
+	db, err := gorm.Open(sqlite.Open(fname), &gorm.Config{})
 	if err != nil {
 		return fmt.Errorf("error connecting to database: %w", err)
 	}

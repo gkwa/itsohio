@@ -1,11 +1,12 @@
 module github.com/taylormonacelli/itsohio
 
-go 1.21.4
+go 1.21.6
 
 require (
 	github.com/glebarez/sqlite v1.10.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.17.0
+	github.com/taylormonacelli/bravelock v0.0.0-20240121181537-3e103d4d8e64
 	github.com/taylormonacelli/goldbug v0.0.6
 	golang.org/x/text v0.13.0
 	gorm.io/gorm v1.25.5
