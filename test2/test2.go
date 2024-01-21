@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/spf13/viper"
 	"github.com/taylormonacelli/bravelock/filename"
 	"github.com/taylormonacelli/itsohio/common"
 
@@ -15,11 +16,6 @@ type User struct {
 	gorm.Model
 	Username string `gorm:"not null"`
 }
-
-var (
-	UserCount = 1_000
-	BatchSize = 1_000
-)
 
 func Test2() error {
 	strategy := &filename.ReflectionStrategy{}
@@ -38,11 +34,16 @@ func Test2() error {
 
 	var users []User
 
-	for i := 1; i <= UserCount; i++ {
+	userCount := viper.GetInt("user-count")
+	batchSize := viper.GetInt("batch-size")
+
+	slog.Debug("params", "batchSize", batchSize, "userCount", userCount)
+
+	for i := 1; i <= userCount; i++ {
 		username := fmt.Sprintf("user%d", i)
 		users = append(users, User{Username: username})
 
-		if i%BatchSize == 0 || i == 50_000 {
+		if i%batchSize == 0 || i == userCount {
 			// Insert the batch
 			result := db.Create(&users)
 			if result.Error != nil {
@@ -56,7 +57,8 @@ func Test2() error {
 	}
 
 	stats := common.StatsData{
-		TableName: "users",
+		TableName:  "users",
+		DbFilePath: fname,
 	}
 
 	err = common.ShowStats(db, stats)

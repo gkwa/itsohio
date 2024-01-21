@@ -3,6 +3,7 @@ module github.com/taylormonacelli/itsohio
 go 1.21.6
 
 require (
+	github.com/dustin/go-humanize v1.0.1
 	github.com/glebarez/sqlite v1.10.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.17.0
@@ -13,7 +14,6 @@ require (
 )
 
 require (
-	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/glebarez/go-sqlite v1.21.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect

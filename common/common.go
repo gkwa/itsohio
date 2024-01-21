@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"os"
 
+	"github.com/dustin/go-humanize"
 	"golang.org/x/text/message"
 	"gorm.io/gorm"
 )
@@ -31,20 +32,28 @@ func getRowCount(db *gorm.DB, tableName string) (int64, error) {
 // Define a template for the output
 const statsTemplate = `
 Row count: {{ .RowCount | formatNumber }}
-File size: {{ .FileSize | formatNumber }} bytes
+File size: {{ .FileSize | formatBytes }}
 `
 
 // StatsData represents the data for the template
 type StatsData struct {
-	RowCount  int64
-	FileSize  int64
-	TableName string
+	RowCount   int64
+	FileSize   int64
+	TableName  string
+	DbFilePath string
 }
 
 // formatNumber formats the number with thousand separators
 func formatNumber(n int64) string {
 	p := message.NewPrinter(message.MatchLanguage("en"))
 	return p.Sprint(n)
+}
+
+// formatNumber formats the number with thousand separators
+func formatBytes(n int64) string {
+	bytes := int64(n)
+	size := humanize.Bytes(uint64(bytes))
+	return size
 }
 
 func ShowStats(db *gorm.DB, stats StatsData) error {
@@ -61,9 +70,19 @@ func ShowStats(db *gorm.DB, stats StatsData) error {
 		return fmt.Errorf("error getting file size: %w", err)
 	}
 
+	// Get file information
+	fileInfo, err := os.Stat(stats.DbFilePath)
+	if err != nil {
+		return fmt.Errorf("error getting file information: %w", err)
+	}
+
+	// Get file size in bytes
+	stats.FileSize = fileInfo.Size()
+
 	// Create a new template and parse it
 	funcMap := template.FuncMap{
 		"formatNumber": formatNumber,
+		"formatBytes":  formatBytes,
 	}
 
 	tmpl, err := template.New("stats").Funcs(funcMap).Parse(statsTemplate)

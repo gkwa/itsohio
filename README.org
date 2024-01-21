@@ -1,7 +1,11 @@
 * itsohio
 
-This is a description of my itsohio.
+** purpose: learn to use gorm properly
 
-** Usage
+** test2
 
-To use my project, run this command: ./itsohio --verbose
+Fiddling with batch size
+#+begin_example
+rm -f *.sqlite
+make && time ./itsohio test2 --user-count 5000 -vv --batch-size 1
+#+end_example

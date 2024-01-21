@@ -5,8 +5,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/taylormonacelli/itsohio/test2"
 )
 
@@ -28,6 +30,11 @@ to quickly create a Cobra application.`,
 	},
 }
 
+var (
+	userCount int
+	batchSize int
+)
+
 func init() {
 	rootCmd.AddCommand(test2Cmd)
 
@@ -40,4 +47,17 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// test2Cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	test2Cmd.PersistentFlags().IntVar(&userCount, "user-count", 500_000, "number of users to insert")
+	err := viper.BindPFlag("user-count", test2Cmd.PersistentFlags().Lookup("user-count"))
+	if err != nil {
+		fmt.Println("error binding user-count flag")
+		os.Exit(1)
+	}
+
+	test2Cmd.PersistentFlags().IntVar(&batchSize, "batch-size", 1_000, "sqlite batch size")
+	err = viper.BindPFlag("batch-size", test2Cmd.PersistentFlags().Lookup("batch-size"))
+	if err != nil {
+		fmt.Println("error binding batch-size flag")
+		os.Exit(1)
+	}
 }

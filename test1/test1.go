@@ -56,7 +56,8 @@ func Test1() error {
 	}
 
 	stats := common.StatsData{
-		TableName: "users",
+		TableName:  "users",
+		DbFilePath: fname,
 	}
 
 	err = common.ShowStats(db, stats)
