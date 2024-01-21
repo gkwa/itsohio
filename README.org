@@ -2,6 +2,8 @@
 
 ** purpose: learn to use gorm properly
 
+Learning the characteristics of batch inserting.
+
 ** test2
 
 Fiddling with batch size
