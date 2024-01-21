@@ -18,7 +18,7 @@ type User struct {
 }
 
 func Test2() error {
-	strategy := &filename.ReflectionStrategy{}
+	strategy := &filename.FilenameFromGoPackageStrategy{}
 	fname := filename.GetFnameWithoutExtension(strategy.GetFilename())
 	fname = fmt.Sprintf("%s.sqlite", fname)
 

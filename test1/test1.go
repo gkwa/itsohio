@@ -22,7 +22,7 @@ var (
 )
 
 func Test1() error {
-	strategy := &filename.ReflectionStrategy{}
+	strategy := &filename.FilenameFromGoPackageStrategy{}
 	fname := filename.GetFnameWithoutExtension(strategy.GetFilename())
 	fname = fmt.Sprintf("%s.sqlite", fname)
 
