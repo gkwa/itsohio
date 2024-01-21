@@ -22,6 +22,10 @@ $(BIN): $(GO_FILES) $(GO_DEPS)
 test: $(BIN)
 	./$(BIN) -v -v
 
+.PHONY: test2
+test2: $(BIN)
+	./$(BIN) test2
+
 .PHONY: install
 install: $(BIN)
 	mv $(BIN) $(GOPATH)/bin/$(BIN)

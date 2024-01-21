@@ -10,6 +10,7 @@ import (
 
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type User struct {
@@ -18,11 +19,15 @@ type User struct {
 }
 
 func Test2() error {
+	gormConfig := &gorm.Config{}
+	gormConfig.Logger = logger.Default.LogMode(logger.Silent)
+
 	strategy := &filename.FilenameFromGoPackageStrategy{}
 	fname := filename.GetFnameWithoutExtension(strategy.GetFilename())
 	fname = fmt.Sprintf("%s.sqlite", fname)
 
-	db, err := gorm.Open(sqlite.Open(fname), &gorm.Config{})
+	dialector := sqlite.Open(fname)
+	db, err := gorm.Open(dialector, gormConfig)
 	if err != nil {
 		return fmt.Errorf("error connecting to database: %w", err)
 	}

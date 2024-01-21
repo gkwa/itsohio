@@ -4,10 +4,11 @@
 
 Learning the characteristics of batch inserting.
 
-** test2
+** tests
 
 Fiddling with batch size
 #+begin_example
 rm -f *.sqlite
-make && time ./itsohio test2 --user-count 5000 -vv --batch-size 1
+make && time ./itsohio test1
+make && time ./itsohio test2
 #+end_example
