@@ -2,8 +2,9 @@ package common
 
 import (
 	"fmt"
+	"html/template"
+	"os"
 
-	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"gorm.io/gorm"
 )
@@ -27,26 +28,53 @@ func getRowCount(db *gorm.DB, tableName string) (int64, error) {
 	return rowCount, nil
 }
 
-func ShowStats(db *gorm.DB, tableName string) error {
-	var rowCount int64
-	var fileSize int64
+// Define a template for the output
+const statsTemplate = `
+Row count: {{ .RowCount | formatNumber }}
+File size: {{ .FileSize | formatNumber }} bytes
+`
 
-	rowCount, err := getRowCount(db, tableName)
+// StatsData represents the data for the template
+type StatsData struct {
+	RowCount  int64
+	FileSize  int64
+	TableName string
+}
+
+// formatNumber formats the number with thousand separators
+func formatNumber(n int64) string {
+	p := message.NewPrinter(message.MatchLanguage("en"))
+	return p.Sprint(n)
+}
+
+func ShowStats(db *gorm.DB, stats StatsData) error {
+	// Get row count
+	rc, err := getRowCount(db, stats.TableName)
 	if err != nil {
 		return fmt.Errorf("error getting row count: %w", err)
 	}
 
+	stats.RowCount = rc
+
 	// Get file size
-	if err := db.Raw("PRAGMA page_size").Scan(&fileSize).Error; err != nil {
+	if err := db.Raw("PRAGMA page_size").Scan(&stats.FileSize).Error; err != nil {
 		return fmt.Errorf("error getting file size: %w", err)
 	}
 
-	p := message.NewPrinter(language.English)
-	formattedRowCount := p.Sprintf("%d", rowCount)
-	formattedFileSize := p.Sprintf("%d bytes", fileSize)
+	// Create a new template and parse it
+	funcMap := template.FuncMap{
+		"formatNumber": formatNumber,
+	}
 
-	fmt.Printf("Row count: %s\n", formattedRowCount)
-	fmt.Printf("File size: %s\n", formattedFileSize)
+	tmpl, err := template.New("stats").Funcs(funcMap).Parse(statsTemplate)
+	if err != nil {
+		return fmt.Errorf("error parsing template: %w", err)
+	}
+
+	// Execute the template
+	if err := tmpl.Execute(os.Stdout, stats); err != nil {
+		return fmt.Errorf("error executing template: %v", err)
+	}
 
 	return nil
 }

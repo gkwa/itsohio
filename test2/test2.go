@@ -12,11 +12,11 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"unique;not null"`
+	Username string `gorm:"not null"`
 }
 
 var (
-	UserCount = 50_000
+	UserCount = 1_000
 	BatchSize = 1_000
 )
 
@@ -50,7 +50,11 @@ func Test2() error {
 		}
 	}
 
-	err = common.ShowStats(db, "users")
+	stats := common.StatsData{
+		TableName: "users",
+	}
+
+	err = common.ShowStats(db, stats)
 	if err != nil {
 		return fmt.Errorf("error showing stats: %w", err)
 	}

@@ -50,7 +50,11 @@ func Test1() error {
 		}
 	}
 
-	err = common.ShowStats(db, "users")
+	stats := common.StatsData{
+		TableName: "users",
+	}
+
+	err = common.ShowStats(db, stats)
 	if err != nil {
 		return fmt.Errorf("error showing stats: %w", err)
 	}
