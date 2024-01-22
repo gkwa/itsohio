@@ -11,4 +11,7 @@ Fiddling with batch size
 rm -f *.sqlite
 make && time ./itsohio test1
 make && time ./itsohio test2
+make && time ./itsohio test3
+make && time ./itsohio test4
+make && time ./itsohio test4 --batch-size 8000 --user-count 50000 -vv
 #+end_example

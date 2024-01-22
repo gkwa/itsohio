@@ -20,7 +20,7 @@ type User struct {
 
 func Test4() error {
 	gormConfig := &gorm.Config{}
-	gormConfig.Logger = logger.Default.LogMode(logger.Silent)
+	gormConfig.Logger = logger.Default.LogMode(logger.Info)
 
 	strategy := &filename.FilenameFromGoPackageStrategy{}
 	fname := filename.GetFnameWithoutExtension(strategy.GetFilename())
@@ -114,7 +114,10 @@ func Test4() error {
 		Having("COUNT(*) > 1").
 		Pluck("username", &duplicateUsernames)
 
-	slog.Debug("duplicateUsernames", "value", duplicateUsernames)
+	slog.Debug("duplicateUsernames", "count", len(duplicateUsernames))
+
+	// Create a map to store IDs of records to be deleted
+	recordsToDelete := make(map[uint]bool)
 
 	// Loop through each duplicate username
 	for _, username := range duplicateUsernames {
@@ -124,21 +127,45 @@ func Test4() error {
 			Order("created_at ASC").
 			Find(&duplicateRecords)
 
-		// Keep the first record (oldest created_at), delete the rest
+		// Keep the first record (oldest created_at), add others to the deletion list
 		for i := 1; i < len(duplicateRecords); i++ {
-			result := db.Delete(&duplicateRecords[i])
-			slog.Debug("result", "value", result)
-			if result.Error != nil {
-				slog.Error("error deleting duplicate user", "error", result.Error)
-				return fmt.Errorf("error deleting duplicate user: %v", result.Error)
-			}
+			recordsToDelete[duplicateRecords[i].ID] = true
 		}
 	}
+
+	// Convert map keys (record IDs) to a slice
+	var idsToDelete []uint
+	for id := range recordsToDelete {
+		idsToDelete = append(idsToDelete, id)
+	}
+
+	// Delete records in batches
+	batchSizeDelete := 100
+	for i := 0; i < len(idsToDelete); i += batchSizeDelete {
+		end := i + batchSizeDelete
+		if end > len(idsToDelete) {
+			end = len(idsToDelete)
+		}
+
+		batchIDs := idsToDelete[i:end]
+
+		// Perform a single delete statement for each batch
+		result := db.Where("id IN ?", batchIDs).Delete(&User{})
+		if result.Error != nil {
+			slog.Error("error deleting duplicate users", "error", result.Error)
+			return fmt.Errorf("error deleting duplicate users: %v", result.Error)
+		}
+	}
+
+	// Reset or zero out the results slice
+	results = []struct {
+		Username string
+		Count    int
+	}{}
 
 	db.Model(&User{}).
 		Select("username, COUNT(*) as count").
 		Group("username").
-		Having("COUNT(*) > 1").
 		Scan(&results)
 
 	// Print or process the results
