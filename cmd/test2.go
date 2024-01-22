@@ -27,11 +27,6 @@ to quickly create a Cobra application.`,
 	},
 }
 
-var (
-	userCount int
-	batchSize int
-)
-
 func init() {
 	rootCmd.AddCommand(test2Cmd)
 
@@ -44,6 +39,12 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// test2Cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	var (
+		userCount int
+		batchSize int
+	)
+
 	test2Cmd.Flags().IntVar(&userCount, "user-count", 50_000, "number of users to insert")
 	test2Cmd.Flags().IntVar(&batchSize, "batch-size", 8_000, "sqlite batch size")
 
