@@ -5,8 +5,8 @@
 I see lots of php running sql in loops and I look the other way in
 disgust.
 
-Here's me trying to put money where my mouth is and see if I can avoid
-looping.
+Here's me trying to put money where my mouth is and look at what kind
+of work is required to avoid sql in loops.
 
 ** purpose: learn to use gorm properly
 
