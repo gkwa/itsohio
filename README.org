@@ -1,6 +1,9 @@
 * itsohio
+** purpose: learn to use gorm properly
 
-** motivation:
+Learning the characteristics of batch inserting to avoid sql in loops.
+
+** motivation
 
 I see lots of php running sql in loops and I look the other way in
 disgust.
@@ -8,13 +11,11 @@ disgust.
 Here's me trying to put money where my mouth is and look at what kind
 of work is required to avoid sql in loops.
 
-** purpose: learn to use gorm properly
-
-Learning the characteristics of batch inserting.
-
 ** tests
-
 *** iterating
+
+Not too interesting...mostly learning to setup cobra-cli project
+properly and how to use gorm logging.
 
 Fiddling with batch size
 #+begin_example
@@ -25,7 +26,6 @@ make && time ./itsohio test3
 #+end_example
 
 *** test4
-
 **** small batch size, small user count
 
 This is helpful to see whats happeing, there is small batch size and
