@@ -14,12 +14,28 @@ Learning the characteristics of batch inserting.
 
 ** tests
 
+*** iterating
+
 Fiddling with batch size
 #+begin_example
 rm -f *.sqlite
 make && time ./itsohio test1
 make && time ./itsohio test2
 make && time ./itsohio test3
+#+end_example
+
+*** test4
+
+**** small batch size, small user count
+
+This is helpful to see whats happeing, there is small batch size and
+small user count.
+#+begin_example
 make && time ./itsohio test4
+#+end_example
+
+**** large user count falls over: too slow in loop
+
+#+begin_example
 make && time ./itsohio test4 --batch-size 8000 --user-count 50000 -vv
 #+end_example
