@@ -19,6 +19,9 @@ type User struct {
 }
 
 func Test3() error {
+	userCount := viper.GetInt("user-count")
+	batchSize := viper.GetInt("batch-size")
+
 	gormConfig := &gorm.Config{}
 	gormConfig.Logger = logger.Default.LogMode(logger.Info)
 
@@ -38,9 +41,6 @@ func Test3() error {
 	}
 
 	var users []User
-
-	userCount := viper.GetInt("user-count")
-	batchSize := viper.GetInt("batch-size")
 
 	slog.Debug("params", "batchSize", batchSize, "userCount", userCount)
 
