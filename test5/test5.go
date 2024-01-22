@@ -24,10 +24,10 @@ func Test5() error {
 	batchSize := viper.GetInt("batch-size")
 	gormLogLevel := parseLogLevel(viper.GetString("gorm-log-level"))
 
+	slog.Debug("log level", "gormLogLevel", gormLogLevel)
 	gormConfig := &gorm.Config{
 		Logger: logger.Default.LogMode(gormLogLevel),
 	}
-	gormConfig.Logger = logger.Default.LogMode(logger.Silent)
 
 	strategy := &filename.FilenameFromGoPackageStrategy{}
 	fname := filename.GetFnameWithoutExtension(strategy.GetFilename())

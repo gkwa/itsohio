@@ -25,6 +25,17 @@ make && time ./itsohio test2
 make && time ./itsohio test3
 #+end_example
 
+*** test5
+
+Ok, I see I'm suppose to use these:
++ https://gorm.io/gen/create.html#Upsert-x2F-On-Conflict
++ https://gorm.io/gen/create.html#Batch-Insert
+
+#+begin_example
+# bad:  make && ./itsohio test5 --user-count 5 --gorm-log-level silent
+# good: make && ./itsohio test5 --user-count 5 --gorm-log-level info
+#+end_example
+
 *** test4
 **** small batch size, small user count
 
