@@ -44,6 +44,34 @@ func Test4() error {
 
 	slog.Debug("params", "batchSize", batchSize, "userCount", userCount)
 
+	var results []struct {
+		Username string
+		Count    int
+	}
+
+	// Reset or zero out the results slice
+	results = []struct {
+		Username string
+		Count    int
+	}{}
+
+	db.Model(&User{}).
+		Select("username, COUNT(*) as count").
+		Group("username").
+		Having("COUNT(*) > 1").
+		Scan(&results)
+
+	// Print or process the results
+	for _, result := range results {
+		fmt.Printf("Username: %s, Count: %d\n", result.Username, result.Count)
+	}
+
+	// Reset or zero out the results slice
+	results = []struct {
+		Username string
+		Count    int
+	}{}
+
 	for i := 1; i <= userCount; i++ {
 		username := fmt.Sprintf("user%d", i)
 		users = append(users, User{Username: username})
@@ -61,10 +89,50 @@ func Test4() error {
 		}
 	}
 
-	// Query using GORM
-	var results []struct {
+	db.Model(&User{}).
+		Select("username, COUNT(*) as count").
+		Group("username").
+		Having("COUNT(*) > 1").
+		Scan(&results)
+
+	// Print or process the results
+	for _, result := range results {
+		fmt.Printf("Username: %s, Count: %d\n", result.Username, result.Count)
+	}
+
+	// Reset or zero out the results slice
+	results = []struct {
 		Username string
 		Count    int
+	}{}
+
+	// Query duplicates using GORM
+	var duplicateUsernames []string
+	db.Model(&User{}).
+		Select("username").
+		Group("username").
+		Having("COUNT(*) > 1").
+		Pluck("username", &duplicateUsernames)
+
+	slog.Debug("duplicateUsernames", "value", duplicateUsernames)
+
+	// Loop through each duplicate username
+	for _, username := range duplicateUsernames {
+		// Find the records with the duplicate username and order by created_at ascending
+		var duplicateRecords []User
+		db.Where("username = ?", username).
+			Order("created_at ASC").
+			Find(&duplicateRecords)
+
+		// Keep the first record (oldest created_at), delete the rest
+		for i := 1; i < len(duplicateRecords); i++ {
+			result := db.Delete(&duplicateRecords[i])
+			slog.Debug("result", "value", result)
+			if result.Error != nil {
+				slog.Error("error deleting duplicate user", "error", result.Error)
+				return fmt.Errorf("error deleting duplicate user: %v", result.Error)
+			}
+		}
 	}
 
 	db.Model(&User{}).
@@ -75,8 +143,14 @@ func Test4() error {
 
 	// Print or process the results
 	for _, result := range results {
-		fmt.Printf("Field1: %s,Count: %d\n", result.Username, result.Count)
+		fmt.Printf("Username: %s, Count: %d\n", result.Username, result.Count)
 	}
+
+	// Reset or zero out the results slice
+	results = []struct {
+		Username string
+		Count    int
+	}{}
 
 	stats := common.StatsData{
 		TableName:  "users",
