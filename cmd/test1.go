@@ -7,7 +7,6 @@ import (
 	"github.com/taylormonacelli/itsohio/test1"
 )
 
-// test1Cmd represents the test1 command
 var test1Cmd = &cobra.Command{
 	Use:   "test1",
 	Short: "A brief description of your command",
