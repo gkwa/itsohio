@@ -45,16 +45,19 @@ func init() {
 	// is called directly, e.g.:
 	// test2Cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	test2Cmd.Flags().IntVar(&userCount, "user-count", 50_000, "number of users to insert")
-	err := viper.BindPFlag("user-count", test2Cmd.Flags().Lookup("user-count"))
-	if err != nil {
-		fmt.Println("error binding user-count flag")
-		os.Exit(1)
-	}
-
 	test2Cmd.Flags().IntVar(&batchSize, "batch-size", 8_000, "sqlite batch size")
-	err = viper.BindPFlag("batch-size", test2Cmd.Flags().Lookup("batch-size"))
-	if err != nil {
-		fmt.Println("error binding batch-size flag")
-		os.Exit(1)
+
+	test2Cmd.PreRun = func(cmd *cobra.Command, args []string) {
+		err := viper.BindPFlag("user-count", cmd.Flags().Lookup("user-count"))
+		if err != nil {
+			fmt.Println("error binding user-count flag")
+			os.Exit(1)
+		}
+
+		err = viper.BindPFlag("batch-size", test2Cmd.Flags().Lookup("batch-size"))
+		if err != nil {
+			fmt.Println("error binding batch-size flag")
+			os.Exit(1)
+		}
 	}
 }
