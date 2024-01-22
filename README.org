@@ -1,5 +1,13 @@
 * itsohio
 
+** motivation:
+
+I see lots of php running sql in loops and I look the other way in
+disgust.
+
+Here's me trying to put money where my mouth is and see if I can avoid
+looping.
+
 ** purpose: learn to use gorm properly
 
 Learning the characteristics of batch inserting.
