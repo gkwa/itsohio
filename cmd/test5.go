@@ -51,7 +51,7 @@ func init() {
 	test5Cmd.Flags().StringVar(&gormLogLevel, "gorm-log-level", "silent", "gorm log level (silent, warn, error, info)")
 
 	test5Cmd.PreRun = func(cmd *cobra.Command, args []string) {
-		err := viper.BindPFlag("user-count", cmd.Flags().Lookup("user-count"))
+		err := viper.BindPFlag("user-count", test5Cmd.Flags().Lookup("user-count"))
 		if err != nil {
 			fmt.Println("error binding user-count flag")
 			os.Exit(1)

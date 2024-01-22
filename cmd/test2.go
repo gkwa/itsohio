@@ -49,7 +49,7 @@ func init() {
 	test2Cmd.Flags().IntVar(&batchSize, "batch-size", 8_000, "sqlite batch size")
 
 	test2Cmd.PreRun = func(cmd *cobra.Command, args []string) {
-		err := viper.BindPFlag("user-count", cmd.Flags().Lookup("user-count"))
+		err := viper.BindPFlag("user-count", test2Cmd.Flags().Lookup("user-count"))
 		if err != nil {
 			fmt.Println("error binding user-count flag")
 			os.Exit(1)
