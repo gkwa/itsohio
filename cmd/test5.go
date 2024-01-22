@@ -41,12 +41,14 @@ func init() {
 	// test5Cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	var (
-		userCount int
-		batchSize int
+		userCount    int
+		batchSize    int
+		gormLogLevel string
 	)
 
 	test5Cmd.Flags().IntVar(&userCount, "user-count", 10, "number of users to insert")
 	test5Cmd.Flags().IntVar(&batchSize, "batch-size", 3, "sqlite batch size")
+	test5Cmd.Flags().StringVar(&gormLogLevel, "gorm-log-level", "silent", "gorm log level (silent, warn, error, info)")
 
 	test5Cmd.PreRun = func(cmd *cobra.Command, args []string) {
 		err := viper.BindPFlag("user-count", cmd.Flags().Lookup("user-count"))
@@ -58,6 +60,12 @@ func init() {
 		err = viper.BindPFlag("batch-size", test5Cmd.Flags().Lookup("batch-size"))
 		if err != nil {
 			fmt.Println("error binding batch-size flag")
+			os.Exit(1)
+		}
+
+		err = viper.BindPFlag("gorm-log-level", test5Cmd.Flags().Lookup("gorm-log-level"))
+		if err != nil {
+			fmt.Println("error binding gorm-log-level flag")
 			os.Exit(1)
 		}
 	}

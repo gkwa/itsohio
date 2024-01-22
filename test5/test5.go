@@ -3,6 +3,7 @@ package test5
 import (
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/spf13/viper"
 	"github.com/taylormonacelli/bravelock/filename"
@@ -15,11 +16,17 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"not null"`
+	Username string `gorm:"unique;not null"`
 }
 
 func Test5() error {
-	gormConfig := &gorm.Config{}
+	userCount := viper.GetInt("user-count")
+	batchSize := viper.GetInt("batch-size")
+	gormLogLevel := parseLogLevel(viper.GetString("gorm-log-level"))
+
+	gormConfig := &gorm.Config{
+		Logger: logger.Default.LogMode(gormLogLevel),
+	}
 	gormConfig.Logger = logger.Default.LogMode(logger.Silent)
 
 	strategy := &filename.FilenameFromGoPackageStrategy{}
@@ -39,27 +46,14 @@ func Test5() error {
 
 	var users []User
 
-	userCount := viper.GetInt("user-count")
-	batchSize := viper.GetInt("batch-size")
-
 	slog.Debug("params", "batchSize", batchSize, "userCount", userCount)
 
 	for i := 1; i <= userCount; i++ {
 		username := fmt.Sprintf("user%d", i)
 		users = append(users, User{Username: username})
-
-		if i%batchSize == 0 || i == userCount {
-			// Insert the batch
-			result := db.Create(&users)
-			if result.Error != nil {
-				slog.Error("error inserting users", "error", result.Error)
-				return fmt.Errorf("error inserting users: %v", result.Error)
-			}
-
-			// Clear the slice for the next batch
-			users = []User{}
-		}
 	}
+
+	db.Create(&users)
 
 	stats := common.StatsData{
 		TableName:  "users",
@@ -78,4 +72,21 @@ func Test5() error {
 	sqlDB.Close()
 
 	return nil
+}
+
+func parseLogLevel(level string) logger.LogLevel {
+	switch level {
+	case "silent":
+		return logger.Silent
+	case "warn":
+		return logger.Warn
+	case "error":
+		return logger.Error
+	case "info":
+		return logger.Info
+	default:
+		fmt.Println("Invalid log level. Supported values: silent, warn, error, info")
+		os.Exit(1)
+		return logger.Info
+	}
 }
