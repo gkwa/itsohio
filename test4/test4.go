@@ -1,4 +1,4 @@
-package test3
+package test4
 
 import (
 	"fmt"
@@ -15,10 +15,10 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"not null"`
+	Username string `gorm:"unique;not null"`
 }
 
-func Test3() error {
+func Test4() error {
 	gormConfig := &gorm.Config{}
 	gormConfig.Logger = logger.Default.LogMode(logger.Info)
 
