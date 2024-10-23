@@ -9,8 +9,8 @@ require (
 	github.com/spf13/viper v1.17.0
 	github.com/taylormonacelli/bravelock v0.0.1
 	github.com/taylormonacelli/goldbug v0.0.6
-	golang.org/x/text v0.13.0
-	gorm.io/gorm v1.25.5
+	golang.org/x/text v0.14.0
+	gorm.io/gorm v1.25.12
 )
 
 require (
