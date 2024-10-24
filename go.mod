@@ -4,7 +4,7 @@ go 1.21.6
 
 require (
 	github.com/dustin/go-humanize v1.0.1
-	github.com/glebarez/sqlite v1.10.0
+	github.com/glebarez/sqlite v1.11.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.17.0
 	github.com/taylormonacelli/bravelock v0.0.1
