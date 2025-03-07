@@ -1,6 +1,8 @@
 module github.com/taylormonacelli/itsohio
 
-go 1.21.6
+go 1.23.0
+
+toolchain go1.24.1
 
 require (
 	github.com/dustin/go-humanize v1.0.1
@@ -9,7 +11,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/taylormonacelli/bravelock v0.0.1
 	github.com/taylormonacelli/goldbug v0.0.6
-	golang.org/x/text v0.22.0
+	golang.org/x/text v0.23.0
 	gorm.io/gorm v1.25.12
 )
 
