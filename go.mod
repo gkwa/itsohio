@@ -8,7 +8,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/glebarez/sqlite v1.11.0
 	github.com/spf13/cobra v1.9.1
-	github.com/spf13/viper v1.20.0
+	github.com/spf13/viper v1.20.1
 	github.com/taylormonacelli/bravelock v0.0.1
 	github.com/taylormonacelli/goldbug v0.0.6
 	golang.org/x/text v0.23.0
