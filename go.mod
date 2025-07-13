@@ -2,7 +2,7 @@ module github.com/taylormonacelli/itsohio
 
 go 1.23.0
 
-toolchain go1.24.4
+toolchain go1.24.5
 
 require (
 	github.com/dustin/go-humanize v1.0.1
