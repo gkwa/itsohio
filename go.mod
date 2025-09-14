@@ -12,7 +12,7 @@ require (
 	github.com/taylormonacelli/bravelock v0.0.1
 	github.com/taylormonacelli/goldbug v0.0.6
 	golang.org/x/text v0.29.0
-	gorm.io/gorm v1.30.5
+	gorm.io/gorm v1.31.0
 )
 
 require (
