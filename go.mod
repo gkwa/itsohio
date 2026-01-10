@@ -11,7 +11,7 @@ require (
 	github.com/spf13/viper v1.21.0
 	github.com/taylormonacelli/bravelock v0.0.1
 	github.com/taylormonacelli/goldbug v0.0.6
-	golang.org/x/text v0.32.0
+	golang.org/x/text v0.33.0
 	gorm.io/gorm v1.31.1
 )
 
