@@ -1,6 +1,6 @@
 module github.com/taylormonacelli/itsohio
 
-go 1.25.0
+go 1.26.0
 
 toolchain go1.27.1
 
@@ -11,7 +11,7 @@ require (
 	github.com/spf13/viper v1.21.0
 	github.com/taylormonacelli/bravelock v0.0.1
 	github.com/taylormonacelli/goldbug v0.0.6
-	golang.org/x/text v0.41.0
+	golang.org/x/text v0.42.0
 	gorm.io/gorm v1.31.2
 )
 
